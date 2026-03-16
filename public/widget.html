@@ -131,6 +131,17 @@
     const titleEl = document.getElementById('ltTitle');
     const subtitleEl = document.getElementById('ltSubtitle');
     let iframeEl = null;
+    let autoHideTimer = null;
+
+    // Replace {{key}} placeholders in html string with values from contentData
+    function fillPlaceholders(html, contentData) {
+      if (!html || !contentData) return html || '';
+      return html.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        return Object.prototype.hasOwnProperty.call(contentData, key)
+          ? String(contentData[key])
+          : match;
+      });
+    }
 
     function resetAnimation() {
       lt.classList.remove('show', 'hide');
@@ -138,7 +149,27 @@
       void lt.offsetWidth;
     }
 
-    function applyPreset(preset) {
+    function scheduleAutoHide(ms) {
+      if (autoHideTimer) {
+        clearTimeout(autoHideTimer);
+        autoHideTimer = null;
+      }
+      if (ms > 0) {
+        autoHideTimer = setTimeout(() => {
+          autoHideTimer = null;
+          resetAnimation();
+          lt.classList.add('hide');
+        }, ms);
+      }
+    }
+
+    function applyPreset(preset, contentData, autoHideDuration) {
+      // Clear any pending auto-hide timer
+      if (autoHideTimer) {
+        clearTimeout(autoHideTimer);
+        autoHideTimer = null;
+      }
+
       if (!preset) {
         resetAnimation();
         lt.classList.add('hide');
@@ -181,11 +212,18 @@
           ltInner.innerHTML = '';
           ltInner.appendChild(iframeEl);
         }
-        iframeEl.srcdoc = preset.html;
+        // Fill placeholders with content data before setting srcdoc
+        const processedHtml = fillPlaceholders(preset.html, contentData || {});
+        iframeEl.srcdoc = processedHtml;
       }
 
       resetAnimation();
       lt.classList.add('show');
+
+      // Schedule auto-hide if duration > 0
+      if (typeof autoHideDuration === 'number' && autoHideDuration > 0) {
+        scheduleAutoHide(autoHideDuration);
+      }
     }
 
     function connectWs() {
@@ -198,7 +236,7 @@
         try {
           const msg = JSON.parse(event.data);
           if (msg.type === 'activePreset') {
-            applyPreset(msg.preset);
+            applyPreset(msg.preset, msg.contentData, msg.autoHideDuration);
           }
         } catch (e) {
           console.error('WS message parse error', e);
