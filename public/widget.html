@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OBS Lower Third Widget</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .lt-root {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: flex-end; /* 默认右侧类似晚会信息区 */
+      align-items: center;
+      pointer-events: none;
+      padding: 5vh 6vw;
+      box-sizing: border-box;
+    }
+    .lt-container {
+      position: relative;
+      display: inline-block;
+      min-width: 420px;
+      max-width: 560px;
+      color: #fff;
+      border-radius: 22px;
+      padding: 16px 26px;
+      opacity: 0;
+      transform: translateX(40px) translateY(6px) scale(0.96);
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(255, 140, 0, 0.45);
+      backdrop-filter: blur(18px);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.34), transparent 55%),
+        linear-gradient(135deg, rgba(8,8,12,0.92), rgba(20,14,40,0.96));
+      overflow: hidden;
+      mask-image: radial-gradient(circle at 0 0, rgba(0,0,0,0.0), rgba(0,0,0,1) 45%),
+                  linear-gradient(to left, transparent 0%, black 20%, black 100%);
+      -webkit-mask-image: radial-gradient(circle at 0 0, rgba(0,0,0,0.0), rgba(0,0,0,1) 45%),
+                          linear-gradient(to left, transparent 0%, black 20%, black 100%);
+    }
+    .lt-container::before {
+      content: '';
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 120% 0%, rgba(255, 215, 128, 0.35), transparent 45%),
+        radial-gradient(circle at -10% 100%, rgba(255, 71, 87, 0.45), transparent 55%);
+      opacity: 0.85;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+    .lt-container-inner {
+      position: relative;
+      z-index: 1;
+    }
+    .lt-container.show {
+      animation: lt-enter 0.7s cubic-bezier(0.18, 0.9, 0.3, 1.2) forwards;
+    }
+    .lt-container.hide {
+      animation: lt-exit 0.55s ease-in forwards;
+    }
+    @keyframes lt-enter {
+      0% {
+        opacity: 0;
+        transform: translateX(70px) translateY(10px) scale(0.9);
+        filter: blur(8px);
+      }
+      55% {
+        opacity: 1;
+        transform: translateX(-10px) translateY(0) scale(1.03);
+        filter: blur(0px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) translateY(0) scale(1);
+        filter: blur(0px);
+      }
+    }
+    @keyframes lt-exit {
+      0% {
+        opacity: 1;
+        transform: translateX(0) translateY(0) scale(1);
+        filter: blur(0px);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(40px) translateY(8px) scale(0.95);
+        filter: blur(4px);
+      }
+    }
+    .lt-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 18px rgba(0,0,0,0.9),
+        0 0 32px rgba(255,180,120,0.6);
+    }
+    .lt-subtitle {
+      margin-top: 8px;
+      font-size: 15px;
+      opacity: 0.95;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <div class="lt-root">
+    <div id="lt" class="lt-container">
+      <div class="lt-container-inner" id="ltInner">
+        <div class="lt-title" id="ltTitle"></div>
+        <div class="lt-subtitle" id="ltSubtitle"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const lt = document.getElementById('lt');
+    const ltInner = document.getElementById('ltInner');
+    const titleEl = document.getElementById('ltTitle');
+    const subtitleEl = document.getElementById('ltSubtitle');
+    let iframeEl = null;
+
+    function resetAnimation() {
+      lt.classList.remove('show', 'hide');
+      // 强制重排让下一次动画生效
+      void lt.offsetWidth;
+    }
+
+    function applyPreset(preset) {
+      if (!preset) {
+        resetAnimation();
+        lt.classList.add('hide');
+        return;
+      }
+
+      // 对齐：控制整块在 OBS 画面内的左右位置
+      const root = lt.parentElement;
+      if (preset.align === 'center') {
+        root.style.justifyContent = 'center';
+      } else if (preset.align === 'left') {
+        root.style.justifyContent = 'flex-start';
+      } else {
+        root.style.justifyContent = 'flex-end';
+      }
+
+      // 外观层额外 CSS（对 .lt-root / .lt-container 做全局修饰）
+      const existingStyle = document.getElementById('dynamic-style');
+      if (existingStyle) existingStyle.remove();
+      if (preset.extraCss) {
+        const style = document.createElement('style');
+        style.id = 'dynamic-style';
+        style.textContent = preset.extraCss;
+        document.head.appendChild(style);
+      }
+
+      // 纯外观 preset：如果 kind=iframe，则用 iframe srcdoc 完全接管内部内容
+      if (preset.kind === 'iframe' && preset.html) {
+        // 清空旧文字容器
+        titleEl.textContent = '';
+        subtitleEl.textContent = '';
+        if (!iframeEl) {
+          iframeEl = document.createElement('iframe');
+          iframeEl.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+          iframeEl.style.border = 'none';
+          iframeEl.style.width = '100%';
+          iframeEl.style.height = '100%';
+          iframeEl.style.display = 'block';
+          iframeEl.style.background = 'transparent';
+          ltInner.innerHTML = '';
+          ltInner.appendChild(iframeEl);
+        }
+        iframeEl.srcdoc = preset.html;
+      }
+
+      resetAnimation();
+      lt.classList.add('show');
+    }
+
+    function connectWs() {
+      const loc = window.location;
+      const proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = proto + '//' + loc.host;
+      const ws = new WebSocket(wsUrl);
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === 'activePreset') {
+            applyPreset(msg.preset);
+          }
+        } catch (e) {
+          console.error('WS message parse error', e);
+        }
+      };
+
+      ws.onclose = () => {
+        // simple retry
+        setTimeout(connectWs, 2000);
+      };
+    }
+
+    connectWs();
+  </script>
+</body>
+</html>

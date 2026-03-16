@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #fff;
+      background: transparent;
+    }
+    
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px 20px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    
+    /* 几何图形动画 */
+    .geometric-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    
+    .shape {
+      position: absolute;
+      opacity: 0.6;
+      filter: blur(1px);
+    }
+    
+    .circle {
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,105,180,0.4), transparent 70%);
+    }
+    
+    .square {
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(0,191,255,0.4), rgba(30,144,255,0.2));
+    }
+    
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-bottom: 52px solid rgba(50,205,50,0.4);
+      background: none;
+    }
+    
+    .hexagon {
+      width: 50px;
+      height: 28.87px;
+      background: rgba(255,215,0,0.4);
+      position: relative;
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    }
+    
+    /* 动画 */
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      33% {
+        transform: translate(10px, -15px) rotate(120deg);
+      }
+      66% {
+        transform: translate(-10px, 10px) rotate(240deg);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.4;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.2);
+      }
+    }
+    
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 10px rgba(255,105,180,0.3);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(255,105,180,0.6);
+      }
+    }
+    
+    /* 内容卡片 */
+    .content-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(10, 10, 20, 0.85);
+      backdrop-filter: blur(15px);
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+      min-width: 300px;
+      max-width: 450px;
+      animation: glow 4s infinite;
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ff69b4, #00bfff);
+      border-radius: 10px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      animation: pulse 3s infinite;
+    }
+    
+    .title-section {
+      flex: 1;
+    }
+    
+    .tag {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #00bfff;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .title {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #ff69b4, #00bfff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .description {
+      font-size: 14px;
+      line-height: 1.5;
+      opacity: 0.9;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    
+    .stat-item {
+      text-align: center;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ff69b4;
+      margin-bottom: 2px;
+    }
+    
+    .stat-label {
+      font-size: 10px;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .footer {
+      margin-top: 12px;
+      font-size: 11px;
+      opacity: 0.6;
+      text-align: center;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 几何图形 -->
+    <div class="geometric-shapes" id="shapesContainer">
+      <!-- 图形将通过JS动态生成 -->
+    </div>
+    
+    <!-- 内容卡片 -->
+    <div class="content-card">
+      <div class="header">
+        <div class="icon">◈</div>
+        <div class="title-section">
+          <div class="tag">GEOMETRIC ANIMATION</div>
+          <div class="title">集合图形预设</div>
+        </div>
+      </div>
+      
+      <div class="description">
+        这是一个动态几何图形动画预设，包含多种形状的浮动效果，适合科技、设计、创意类内容的直播展示。
+      </div>
+      
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-value">12</div>
+          <div class="stat-label">图形数量</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">4</div>
+          <div class="stat-label">形状类型</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">6s</div>
+          <div class="stat-label">动画周期</div>
+        </div>
+      </div>
+      
+      <div class="footer">
+        实时渲染 · 几何动画系统
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('shapesContainer');
+      const shapes = ['circle', 'square', 'triangle', 'hexagon'];
+      const colors = [
+        'rgba(255,105,180,0.3)',
+        'rgba(0,191,255,0.3)',
+        'rgba(50,205,50,0.3)',
+        'rgba(255,215,0,0.3)',
+        'rgba(138,43,226,0.3)',
+        'rgba(255,69,0,0.3)'
+      ];
+      
+      // 创建12个随机几何图形
+      for (let i = 0; i < 12; i++) {
+        const shape = document.createElement('div');
+        const shapeType = shapes[Math.floor(Math.random() * shapes.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        shape.className = `shape ${shapeType}`;
+        
+        // 随机位置和大小
+        const size = Math.random() * 60 + 20;
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const duration = Math.random() * 4 + 4;
+        const delay = Math.random() * 2;
+        
+        // 设置样式
+        if (shapeType === 'triangle') {
+          shape.style.borderBottomColor = color;
+        } else if (shapeType === 'hexagon') {
+          shape.style.width = `${size}px`;
+          shape.style.height = `${size * 0.577}px`;
+          shape.style.background = color;
+        } else {
+          shape.style.width = `${size}px`;
+          shape.style.height = `${size}px`;
+          if (shapeType === 'circle') {
+            shape.style.background = `radial-gradient(circle, ${color}, transparent 70%)`;
+          } else {
+            shape.style.background = color;
+          }
+        }
+        
+        shape.style.left = `${left}%`;
+        shape.style.top = `${top}%`;
+        shape.style.animation = `float ${duration}s infinite ease-in-out ${delay}s`;
+        
+        container.appendChild(shape);
+      }
+      
+      // 添加一些交互效果
+      const contentCard = document.querySelector('.content-card');
+      contentCard.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+        this.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)';
+      });
+      
+      contentCard.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)';
+      });
+    });
+  </script>
+</body>
+</html>

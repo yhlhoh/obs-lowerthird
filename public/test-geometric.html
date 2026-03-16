@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>几何动画预设测试</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #1a1a2e;
+      color: #fff;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #ff69b4;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .test-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    
+    .widget-frame {
+      width: 100%;
+      height: 200px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+    }
+    
+    .controls {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .control-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #00bfff;
+      font-weight: 600;
+    }
+    
+    select, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #2a2a3e;
+      color: #fff;
+      font-size: 14px;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #ff69b4, #00bfff);
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+    }
+    
+    .info {
+      background: rgba(0, 191, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #00bfff;
+      margin-top: 20px;
+    }
+    
+    .info h3 {
+      margin-top: 0;
+      color: #00bfff;
+    }
+    
+    .preset-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .preset-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .preset-card:hover {
+      transform: translateY(-5px);
+      border-color: #ff69b4;
+      box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
+    }
+    
+    .preset-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ff69b4;
+      margin-bottom: 8px;
+    }
+    
+    .preset-desc {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 15px;
+    }
+    
+    .preset-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>几何动画预设测试</h1>
+    
+    <div class="test-area">
+      <div>
+        <h2>预设预览</h2>
+        <div class="widget-frame" id="widgetFrame">
+          <!-- 预设将在这里加载 -->
+        </div>
+      </div>
+      
+      <div class="controls">
+        <h2>控制面板</h2>
+        
+        <div class="control-group">
+          <label for="presetSelect">选择预设</label>
+          <select id="presetSelect">
+            <option value="">请选择预设...</option>
+          </select>
+        </div>
+        
+        <div class="control-group">
+          <label for="alignSelect">对齐方式</label>
+          <select id="alignSelect">
+            <option value="left">左对齐</option>
+            <option value="center">居中</option>
+            <option value="right" selected>右对齐</option>
+          </select>
+        </div>
+        
+        <button id="loadPresetBtn">加载预设</button>
+        <button id="refreshBtn" style="margin-top: 10px; background: linear-gradient(135deg, #9d4edd, #ff69b4);">刷新预设列表</button>
+        
+        <div class="info">
+          <h3>使用说明</h3>
+          <p>1. 选择预设类型</p>
+          <p>2. 调整对齐方式</p>
+          <p>3. 点击"加载预设"按钮</p>
+          <p>4. 预设将显示在左侧预览区域</p>
+        </div>
+      </div>
+    </div>
+    
+    <h2>可用预设列表</h2>
+    <div class="preset-list" id="presetList">
+      <!-- 预设列表将通过JS动态生成 -->
+    </div>
+  </div>
+  
+  <script>
+    // 获取DOM元素
+    const widgetFrame = document.getElementById('widgetFrame');
+    const presetSelect = document.getElementById('presetSelect');
+    const alignSelect = document.getElementById('alignSelect');
+    const loadPresetBtn = document.getElementById('loadPresetBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const presetList = document.getElementById('presetList');
+    
+    // 获取预设列表
+    async function fetchPresets() {
+      try {
+        const response = await fetch('/api/presets');
+        const presets = await response.json();
+        return presets;
+      } catch (error) {
+        console.error('获取预设列表失败:', error);
+        return [];
+      }
+    }
+    
+    // 加载预设到iframe
+    function loadPreset(preset) {
+      const align = alignSelect.value;
+      
+      // 创建iframe
+      const iframe = document.createElement('iframe');
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
+      iframe.sandbox = 'allow-scripts allow-same-origin';
+      
+      // 设置iframe内容
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            html, body {
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+              background: transparent;
+            }
+            ${preset.extraCss || ''}
+          </style>
+        </head>
+        <body>
+          ${preset.html}
+        </body>
+        </html>
+      `;
+      
+      // 清空并添加新的iframe
+      widgetFrame.innerHTML = '';
+      widgetFrame.appendChild(iframe);
+      
+      // 写入内容
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      iframeDoc.open();
+      iframeDoc.write(htmlContent);
+      iframeDoc.close();
+    }
+    
+    // 填充预设选择器
+    async function populatePresetSelect() {
+      const presets = await fetchPresets();
+      
+      // 清空选项
+      presetSelect.innerHTML = '<option value="">请选择预设...</option>';
+      
+      // 添加预设选项
+      presets.forEach((preset, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = preset.name;
+        presetSelect.appendChild(option);
+      });
+      
+      // 显示预设列表
+      displayPresetList(presets);
+    }
+    
+    // 显示预设列表
+    function displayPresetList(presets) {
+      presetList.innerHTML = '';
+      
+      presets.forEach((preset, index) => {
+        const card = document.createElement('div');
+        card.className = 'preset-card';
+        
+        card.innerHTML = `
+          <div class="preset-name">${preset.name}</div>
+          <div class="preset-desc">${preset.description}</div>
+          <div class="preset-meta">
+            <span>类型: ${preset.kind}</span>
+            <span>对齐: ${preset.align}</span>
+          </div>
+        `;
+        
+        // 点击卡片加载预设
+        card.addEventListener('click', () => {
+          presetSelect.value = index;
+          loadPreset(preset);
+        });
+        
+        presetList.appendChild(card);
+      });
+    }
+    
+    // 事件监听
+    loadPresetBtn.addEventListener('click', async () => {
+      const selectedIndex = presetSelect.value;
+      if (selectedIndex === '') {
+        alert('请先选择一个预设');
+        return;
+      }
+      
+      const presets = await fetchPresets();
+      const selectedPreset = presets[selectedIndex];
+      
+      if (selectedPreset) {
+        loadPreset(selectedPreset);
+      }
+    });
+    
+    refreshBtn.addEventListener('click', populatePresetSelect);
+    
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      populatePresetSelect();
+      
+      // 默认加载几何动画预设
+      setTimeout(async () => {
+        const presets = await fetchPresets();
+        const geometricPreset = presets.find(p => p.name === '几何动画预设');
+        if (geometricPreset) {
+          const index = presets.indexOf(geometricPreset);
+          presetSelect.value = index;
+          loadPreset(geometricPreset);
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

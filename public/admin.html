@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>OBS 下三分之一条 管理</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #05060a;
+      --bg-elevated: #10121a;
+      --accent: #ffb347;
+      --accent-soft: rgba(255, 179, 71, 0.12);
+      --border-soft: rgba(255, 255, 255, 0.08);
+      --fg: #f5f5f5;
+      --fg-muted: #a0a4b3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px 24px 32px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 0% 0%, #1d2333, #05060a 55%);
+      color: var(--fg);
+    }
+    h1 {
+      font-size: 20px;
+      margin: 0 0 6px;
+    }
+    h2 {
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+    p { margin: 0 0 10px; color: var(--fg-muted); font-size: 13px; }
+    code { background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 4px; font-size: 12px; }
+
+    .card {
+      background: rgba(10, 12, 22, 0.9);
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.75);
+      padding: 14px 16px 16px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(18px);
+    }
+    label { display: block; margin-top: 8px; font-size: 13px; color: var(--fg-muted); }
+    input, textarea, select {
+      width: 100%;
+      padding: 6px 8px;
+      margin-top: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+      background: rgba(3, 5, 12, 0.9);
+      color: var(--fg);
+      font-size: 13px;
+    }
+    textarea { resize: vertical; min-height: 60px; }
+    button {
+      margin-top: 10px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(135deg, rgba(255,179,71,0.85), rgba(255,94,98,0.9));
+      color: #1a1110;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: rgba(18, 20, 30, 0.9);
+      color: var(--fg-muted);
+    }
+    button.inline { margin-right: 6px; }
+
+    .row { margin-top: 14px; }
+    #presetList { margin-top: 6px; }
+    .preset-item {
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: rgba(12, 16, 26, 0.95);
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .preset-item.active {
+      border-color: rgba(255,179,71,0.85);
+      box-shadow: 0 0 0 1px rgba(255,179,71,0.3);
+      background: linear-gradient(135deg, rgba(255,179,71,0.15), rgba(15,18,26,0.9));
+    }
+    .preset-item small { color: var(--fg-muted); }
+  </style>
+</head>
+<body>
+  <h1>OBS 节目信息下三分之一条 - 预设管理</h1>
+  <p>1. 在 OBS 中添加 Browser Source，URL 指向 <code>http://本机或服务器/widget.html</code><br>
+     2. 在下方新增 / 编辑预设，点击“激活”即可在 OBS 中显示该条；点击“清空当前显示”则隐藏。</p>
+
+  <section>
+    <h2>创建 / 编辑外观预设</h2>
+    <label>
+      预设名称（仅管理用，不会在节目中显示）
+      <input id="name" placeholder="例如：晚会右侧信息区 · 主题 1" />
+    </label>
+    <label>
+      预设类型
+      <select id="kind">
+        <option value="iframe">自定义 HTML + CSS + JS（iframe）</option>
+      </select>
+    </label>
+    <label>
+      对齐方式（OBS 画面内的位置）
+      <select id="align">
+        <option value="right">右侧</option>
+        <option value="center">居中</option>
+        <option value="left">左侧</option>
+      </select>
+    </label>
+    <label>
+      自定义 HTML（整个 widget 的内容，包含 &lt;style&gt; / &lt;script&gt; 都可以）
+      <textarea id="html" rows="12" placeholder="<!DOCTYPE html>..."></textarea>
+    </label>
+    <label>
+      额外 CSS（可选，对外层容器 .lt-root / .lt-container 做额外修饰）
+      <textarea id="extraCss" rows="3" placeholder=".lt-container { border-radius: 24px; }"></textarea>
+    </label>
+
+    <button id="savePreset">保存为新预设</button>
+    <button id="updatePreset" disabled>更新当前选中预设</button>
+    <button id="clearForm" type="button" class="secondary">清空表单</button>
+  </section>
+
+  <section class="row">
+    <h2>预设列表</h2>
+    <div id="presetList"></div>
+  </section>
+
+  <section class="row">
+    <button id="clearActive">清空当前显示（透明）</button>
+  </section>
+
+  <script>
+    let presets = [];
+    let activePresetId = null;
+    let selectedPresetId = null;
+
+    async function fetchPresets() {
+      const res = await fetch('/api/presets');
+      const data = await res.json();
+      presets = data.presets || [];
+      activePresetId = data.activePresetId || null;
+      renderList();
+    }
+
+    function renderList() {
+      const list = document.getElementById('presetList');
+      list.innerHTML = '';
+      if (!presets.length) {
+        list.textContent = '暂无预设，请先上面创建一条。';
+        return;
+      }
+      presets.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'preset-item' + (p.id === activePresetId ? ' active' : '');
+        div.innerHTML = `
+          <strong>${p.name || '(未命名外观)'}</strong><br>
+          <small>类型: ${p.kind || 'iframe'} · 对齐: ${p.align || 'right'}</small><br>
+          <button class="inline" data-act="select">选中编辑</button>
+          <button class="inline" data-act="activate">激活</button>
+          <button class="inline" data-act="delete">删除</button>
+        `;
+        div.dataset.id = p.id;
+        list.appendChild(div);
+      });
+    }
+
+    function readForm() {
+      return {
+        name: document.getElementById('name').value.trim(),
+        kind: document.getElementById('kind').value || 'iframe',
+        align: document.getElementById('align').value || 'right',
+        html: document.getElementById('html').value,
+        extraCss: document.getElementById('extraCss').value
+      };
+    }
+
+    function fillForm(preset) {
+      document.getElementById('name').value = preset.name || '';
+      document.getElementById('kind').value = preset.kind || 'iframe';
+      document.getElementById('align').value = preset.align || 'right';
+      document.getElementById('html').value = preset.html || '';
+      document.getElementById('extraCss').value = preset.extraCss || '';
+    }
+
+    document.getElementById('savePreset').onclick = async () => {
+      const body = readForm();
+      const res = await fetch('/api/presets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      await res.json();
+      selectedPresetId = null;
+      document.getElementById('updatePreset').disabled = true;
+      fetchPresets();
+    };
+
+    document.getElementById('updatePreset').onclick = async () => {
+      if (!selectedPresetId) return;
+      const body = readForm();
+      const res = await fetch('/api/presets/' + selectedPresetId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      await res.json();
+      fetchPresets();
+    };
+
+    document.getElementById('clearForm').onclick = () => {
+      selectedPresetId = null;
+      document.getElementById('updatePreset').disabled = true;
+      fillForm({ title: '', subtitle: '', themeColor: '#ff6600', align: 'left', extraCss: '' });
+    };
+
+    document.getElementById('presetList').onclick = async (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const container = btn.closest('.preset-item');
+      const id = container.dataset.id;
+      const act = btn.dataset.act;
+      if (act === 'select') {
+        const preset = presets.find(p => p.id === id);
+        if (!preset) return;
+        selectedPresetId = id;
+        document.getElementById('updatePreset').disabled = false;
+        fillForm(preset);
+      } else if (act === 'activate') {
+        await fetch('/api/presets/' + id + '/activate', { method: 'POST' });
+        fetchPresets();
+      } else if (act === 'delete') {
+        await fetch('/api/presets/' + id, { method: 'DELETE' });
+        if (selectedPresetId === id) {
+          selectedPresetId = null;
+          document.getElementById('updatePreset').disabled = true;
+        }
+        fetchPresets();
+      }
+    };
+
+    document.getElementById('clearActive').onclick = async () => {
+      await fetch('/api/clear', { method: 'POST' });
+      fetchPresets();
+    };
+
+    fetchPresets();
+  </script>
+</body>
+</html>
