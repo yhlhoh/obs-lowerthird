@@ -4,10 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "test": "echo \"No tests configured\"",
     "start": "node server.js"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +13,12 @@
   "dependencies": {
     "express": "^5.2.1",
     "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@babel/standalone": "^7.29.1",
+    "antd": "^5.29.3",
+    "dayjs": "^1.11.20",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }
