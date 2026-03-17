@@ -137,9 +137,7 @@
     function fillPlaceholders(html, contentData) {
       if (!html || !contentData) return html || '';
       return html.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-        return Object.prototype.hasOwnProperty.call(contentData, key)
-          ? String(contentData[key])
-          : match;
+        return key in contentData ? String(contentData[key]) : match;
       });
     }
 
