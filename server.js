@@ -2,10 +2,13 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const WebSocket = require('ws');
+const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+
+const DATA_FILE = path.join(__dirname, 'data.json');
 
 // Global settings
 let settings = {
@@ -109,6 +112,44 @@ let activePresetId = null;
 let activeContentPresetId = null;
 let activeFieldOverrides = {};
 
+// ── Data Persistence ─────────────────────────────────────────────────────────
+
+function loadData() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+      settings = data.settings || settings;
+      presets = data.presets || presets;
+      contentPresets = data.contentPresets || contentPresets;
+      activePresetId = data.activePresetId || null;
+      activeContentPresetId = data.activeContentPresetId || null;
+      activeFieldOverrides = data.activeFieldOverrides || {};
+      console.log('Data loaded from data.json');
+    } else {
+      console.log('data.json not found, using default data');
+      saveData();
+    }
+  } catch (err) {
+    console.error('Failed to load data:', err);
+  }
+}
+
+function saveData() {
+  try {
+    const data = {
+      settings,
+      presets,
+      contentPresets,
+      activePresetId,
+      activeContentPresetId,
+      activeFieldOverrides
+    };
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Failed to save data:', err);
+  }
+}
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -122,6 +163,7 @@ app.put('/api/settings', (req, res) => {
   const { autoHideDuration } = req.body || {};
   if (typeof autoHideDuration === 'number') {
     settings.autoHideDuration = Math.max(0, autoHideDuration);
+    saveData();
   }
   res.json(settings);
 });
@@ -153,6 +195,7 @@ app.post('/api/presets', (req, res) => {
     fieldDefs
   };
   presets.push(preset);
+  saveData();
   res.json(preset);
 });
 
@@ -170,6 +213,7 @@ app.put('/api/presets/:id', (req, res) => {
     fieldDefs = presets[idx].fieldDefs || []
   } = req.body || {};
   presets[idx] = { ...presets[idx], name, kind, html, themeColor, align, extraCss, fieldDefs };
+  saveData();
   res.json(presets[idx]);
 });
 
@@ -180,6 +224,7 @@ app.delete('/api/presets/:id', (req, res) => {
     activePresetId = null;
     broadcastActive();
   }
+  saveData();
   res.json({ ok: true });
 });
 
@@ -202,6 +247,7 @@ app.post('/api/content-presets', (req, res) => {
     fields
   };
   contentPresets.push(cp);
+  saveData();
   res.json(cp);
 });
 
@@ -215,6 +261,7 @@ app.put('/api/content-presets/:id', (req, res) => {
     fields = contentPresets[idx].fields
   } = req.body || {};
   contentPresets[idx] = { ...contentPresets[idx], name, appearancePresetId, fields };
+  saveData();
   res.json(contentPresets[idx]);
 });
 
@@ -225,6 +272,7 @@ app.delete('/api/content-presets/:id', (req, res) => {
     activeContentPresetId = null;
     broadcastActive();
   }
+  saveData();
   res.json({ ok: true });
 });
 
@@ -239,6 +287,7 @@ app.post('/api/content-presets/:id/activate', (req, res) => {
   activeContentPresetId = id;
   activePresetId = cp.appearancePresetId;
   activeFieldOverrides = req.body?.fieldOverrides || {};
+  saveData();
 
   const bodyDuration = req.body && typeof req.body.autoHideDuration === 'number'
     ? req.body.autoHideDuration
@@ -256,6 +305,7 @@ app.post('/api/presets/:id/activate', (req, res) => {
   activePresetId = id;
   activeContentPresetId = null;
   activeFieldOverrides = req.body?.fieldOverrides || {};
+  saveData();
 
   const bodyDuration = req.body && typeof req.body.autoHideDuration === 'number'
     ? req.body.autoHideDuration
@@ -269,6 +319,7 @@ app.post('/api/clear', (req, res) => {
   activePresetId = null;
   activeContentPresetId = null;
   activeFieldOverrides = {};
+  saveData();
   broadcastActive(0);
   res.json({ ok: true });
 });
@@ -325,6 +376,9 @@ wss.on('connection', ws => {
     autoHideDuration: settings.autoHideDuration
   }));
 });
+
+// Load data from file before starting server
+loadData();
 
 const PORT = process.env.PORT || 30001;
 server.listen(PORT, () => {
