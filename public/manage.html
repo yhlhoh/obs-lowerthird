@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>OBS 下三分之一条 · 管理</title>
+  <title>OBS Lower Third · 管理</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Ant Design & React via CDN -->
   <script src="/libs/react.production.min.js"></script>
@@ -788,7 +788,6 @@
           key: 'live',
           label: (
             <Space>
-              <span>🎬</span>
               <span>激活控制</span>
               {data.activeContentPresetId && <Badge dot color="green" />}
             </Space>
@@ -806,7 +805,7 @@
         },
         {
           key: 'appearance',
-          label: '�� 外观预设',
+          label: '外观预设',
           children: (
             <AppearancePresetsTab
               presets={data.presets}
@@ -816,7 +815,7 @@
         },
         {
           key: 'content',
-          label: '📝 内容预设',
+          label: '内容预设',
           children: (
             <ContentPresetsTab
               contentPresets={data.contentPresets}
@@ -843,7 +842,7 @@
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
                 <div>
                   <Title level={4} style={{ margin: 0, color: '#fff', display: 'inline' }}>
-                    OBS 下三分之一条
+                    OBS Lower Thirds Manager
                   </Title>
                   <Text style={{ color: '#888', marginLeft: 12, fontSize: 13 }}>管理面板</Text>
                 </div>

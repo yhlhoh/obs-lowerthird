@@ -16,15 +16,15 @@ let settings = {
 let presets = [
   {
     id: 'preset-gala-iframe-1',
-    name: '晚会右侧信息区 · 模板示例',
+    name: '测试',
     kind: 'iframe',
     align: 'right',
     themeColor: '',
     extraCss: '',
     fieldDefs: [
-      { key: 'tag', label: '标签', defaultValue: 'LIVE · GALA' },
-      { key: 'mainTitle', label: '主标题', defaultValue: '2026 新春特别晚会' },
-      { key: 'subtitle', label: '副标题', defaultValue: '示例：你可以在这里完全自定义 HTML / CSS / JS' }
+      { key: 'tag', label: '标签', defaultValue: 'TEST 测试' },
+      { key: 'mainTitle', label: '主标题', defaultValue: '测试内容' },
+      { key: 'subtitle', label: '副标题', defaultValue: '' }
     ],
     html: `<!DOCTYPE html>
 <html>
@@ -85,22 +85,22 @@ let presets = [
 let contentPresets = [
   {
     id: 'content-preset-1',
-    name: '春晚主持人介绍',
+    name: '测试内容 1',
     appearancePresetId: 'preset-gala-iframe-1',
     fields: {
-      tag: 'LIVE · GALA',
-      mainTitle: '2026 新春特别晚会',
-      subtitle: '主持人：某某某 · 某某某'
+      tag: 'TEST TAG',
+      mainTitle: '测试主标题 1',
+      subtitle: '测试副标题 1'
     }
   },
   {
     id: 'content-preset-2',
-    name: '节目单第一项',
+    name: '测试内容 2',
     appearancePresetId: 'preset-gala-iframe-1',
     fields: {
-      tag: '节目单 01',
-      mainTitle: '《欢乐中国年》',
-      subtitle: '表演：XX歌舞团'
+      tag: 'TEST TAG 2',
+      mainTitle: '测试主标题 2',
+      subtitle: '测试副标题 2'
     }
   }
 ];

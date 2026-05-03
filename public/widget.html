@@ -33,27 +33,20 @@
       padding: 16px 26px;
       opacity: 0;
       transform: translateX(40px) translateY(6px) scale(0.96);
-      border: 1px solid rgba(255,255,255,0.25);
       box-shadow:
         0 20px 40px rgba(0, 0, 0, 0.8),
         0 0 60px rgba(255, 140, 0, 0.45);
       backdrop-filter: blur(18px);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.34), transparent 55%),
-        linear-gradient(135deg, rgba(8,8,12,0.92), rgba(20,14,40,0.96));
+
       overflow: hidden;
       mask-image: radial-gradient(circle at 0 0, rgba(0,0,0,0.0), rgba(0,0,0,1) 45%),
-                  linear-gradient(to left, transparent 0%, black 20%, black 100%);
-      -webkit-mask-image: radial-gradient(circle at 0 0, rgba(0,0,0,0.0), rgba(0,0,0,1) 45%),
-                          linear-gradient(to left, transparent 0%, black 20%, black 100%);
-    }
+        }
     .lt-container::before {
       content: '';
       position: absolute;
       inset: -40%;
-      background:
-        radial-gradient(circle at 120% 0%, rgba(255, 215, 128, 0.35), transparent 45%),
-        radial-gradient(circle at -10% 100%, rgba(255, 71, 87, 0.45), transparent 55%);
+      background-image: url('bg.png');
+      
       opacity: 0.85;
       mix-blend-mode: screen;
       pointer-events: none;
@@ -119,6 +112,7 @@
   <div class="lt-root">
     <div id="lt" class="lt-container">
       <div class="lt-container-inner" id="ltInner">
+        <img src="/zi.png">
         <div class="lt-title" id="ltTitle"></div>
         <div class="lt-subtitle" id="ltSubtitle"></div>
       </div>
