@@ -1,256 +1,294 @@
 {
-  "settings": {
-    "autoHideDuration": 0
-  },
-  "presets": [
-    {
-      "id": "preset-gala-iframe-1",
-      "name": "26五四",
-      "kind": "iframe",
-      "align": "right",
-      "themeColor": "",
-      "extraCss": "",
-      "fieldDefs": [
+    "settings": {
+        "autoHideDuration": 3000
+    },
+    "presets": [
         {
-          "key": "mainTitle",
-          "label": "主标题",
-          "defaultValue": ""
+            "id": "preset-gala-iframe-1",
+            "name": "26五四",
+            "kind": "iframe",
+            "align": "right",
+            "themeColor": "",
+            "extraCss": "",
+            "fieldDefs": [
+                {
+                    "key": "mainTitle",
+                    "label": "主标题",
+                    "defaultValue": ""
+                },
+                {
+                    "key": "subtitle",
+                    "label": "副标题",
+                    "defaultValue": ""
+                }
+            ],
+            "html": "<!DOCTYPE html>\n<html>\n<head>\n <meta charset=\"utf-8\" />\n <style>\n html, body {\n margin: 0;\n padding: 0;\n width: 100%;\n height: 100%;\n overflow: hidden;\n font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;\n color: #fff;\n background: transparent;\n }\n .wrap {\n position: relative;\n width: 100%;\n height: 100%;\n display: flex;\n flex-direction: column;\n justify-content: center;\n align-items: flex-start;\n padding: 10px 16px;\n box-sizing: border-box;\n }\n .tag {\n font-size: 11px;\n letter-spacing: 0.18em;\n text-transform: uppercase;\n opacity: 0.85;\n }\n .title {\n margin-top: 6px;\n font-size: 30px;\n font-weight: 800;\ncolor: #b72331;\n }\n .subtitle {\n margin-top: 4px;\n font-size: 14px;\n opacity: 0.9;\ncolor: #b72331;\n }\n </style>\n</head>\n<body>\n <div class=\"wrap\">\n<img src=\"/zi.png\" style=\"width: 60%;\">\n <div class=\"title\">{{mainTitle}}</div>\n <div class=\"subtitle\">{{subtitle}}</div>\n </div>\n</body>\n</html>"
+        }
+    ],
+    "contentPresets": [
+        {
+            "id": "art-troupe-dance",
+            "name": "艺术团舞蹈",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "阿妈同心圆",
+                "subtitle": "艺术团舞蹈"
+            }
         },
         {
-          "key": "subtitle",
-          "label": "副标题",
-          "defaultValue": ""
+            "id": "2416",
+            "name": "2416",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "花瑶女",
+                "subtitle": "2416班"
+            }
+        },
+        {
+            "id": "2415",
+            "name": "2415",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "鄂尔多斯",
+                "subtitle": "2415班"
+            }
+        },
+        {
+            "id": "2406",
+            "name": "2406",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "节节高",
+                "subtitle": "2406班"
+            }
+        },
+        {
+            "id": "2411",
+            "name": "2411",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "心中的日月",
+                "subtitle": "2411班"
+            }
+        },
+        {
+            "id": "2410",
+            "name": "2410",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "盛装·礼赞",
+                "subtitle": "2410班"
+            }
+        },
+        {
+            "id": "2419",
+            "name": "2419",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "挽歌",
+                "subtitle": "2419班"
+            }
+        },
+        {
+            "id": "2408",
+            "name": "2408",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "雩祈",
+                "subtitle": "2408班"
+            }
+        },
+        {
+            "id": "2401",
+            "name": "2401",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "桃花源记",
+                "subtitle": "2401班"
+            }
+        },
+        {
+            "id": "2424",
+            "name": "2424",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "壮乡鼓韵",
+                "subtitle": "2424班"
+            }
+        },
+        {
+            "id": "2426",
+            "name": "2426",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "冬鹤归春",
+                "subtitle": "2426班"
+            }
+        },
+        {
+            "id": "2413",
+            "name": "2413",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "祈望",
+                "subtitle": "2413班"
+            }
+        },
+        {
+            "id": "2428",
+            "name": "2428",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "团团圆圆",
+                "subtitle": "2428班"
+            }
+        },
+        {
+            "id": "2402",
+            "name": "2402",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "畲山上的刁与花",
+                "subtitle": "2402班"
+            }
+        },
+        {
+            "id": "2421",
+            "name": "2421",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "牧歌·苍穹之下",
+                "subtitle": "2421班"
+            }
+        },
+        {
+            "id": "2405",
+            "name": "2405",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "一个都不能少",
+                "subtitle": "2405班"
+            }
+        },
+        {
+            "id": "2418",
+            "name": "2418",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "望山，看水，家乡美",
+                "subtitle": "2418班"
+            }
+        },
+        {
+            "id": "2427",
+            "name": "2427",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "逢场天",
+                "subtitle": "2427班"
+            }
+        },
+        {
+            "id": "2407",
+            "name": "2407",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "日出",
+                "subtitle": "2407班"
+            }
+        },
+        {
+            "id": "2414",
+            "name": "2414",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "雨祭",
+                "subtitle": "2414班"
+            }
+        },
+        {
+            "id": "2423",
+            "name": "2423",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "行千脊",
+                "subtitle": "2423班"
+            }
+        },
+        {
+            "id": "2422",
+            "name": "2422",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "守护",
+                "subtitle": "2422班"
+            }
+        },
+        {
+            "id": "2404",
+            "name": "2404",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "云水伊人",
+                "subtitle": "2404班"
+            }
+        },
+        {
+            "id": "2417",
+            "name": "2417",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "点亮大山里的希望",
+                "subtitle": "2417班"
+            }
+        },
+        {
+            "id": "2425",
+            "name": "2425",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "笙声吟咏云水情",
+                "subtitle": "2425班"
+            }
+        },
+        {
+            "id": "2420",
+            "name": "2420",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "瑶山夜语",
+                "subtitle": "2420班"
+            }
+        },
+        {
+            "id": "2412",
+            "name": "2412",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "再望这片黑土",
+                "subtitle": "2412班"
+            }
+        },
+        {
+            "id": "2403",
+            "name": "2403",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "天浴·合澜",
+                "subtitle": "2403班"
+            }
+        },
+        {
+            "id": "2409",
+            "name": "2409",
+            "appearancePresetId": "preset-gala-iframe-1",
+            "fields": {
+                "mainTitle": "锦绣十八洞",
+                "subtitle": "2409班"
+            }
         }
-      ],
-      "html": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\" />\n  <style>\n    html, body {\n      margin: 0;\n      padding: 0;\n      width: 100%;\n      height: 100%;\n      overflow: hidden;\n      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;\n      color: #fff;\n      background: transparent;\n    }\n    .wrap {\n      position: relative;\n      width: 100%;\n      height: 100%;\n      display: flex;\n      flex-direction: column;\n      justify-content: center;\n      align-items: flex-start;\n      padding: 10px 16px;\n      box-sizing: border-box;\n    }\n    .tag {\n      font-size: 11px;\n      letter-spacing: 0.18em;\n      text-transform: uppercase;\n      opacity: 0.85;\n    }\n    .title {\n      margin-top: 6px;\n      font-size: 30px;\n      font-weight: 800;\ncolor: #b72331;\n    }\n    .subtitle {\n      margin-top: 4px;\n      font-size: 14px;\n      opacity: 0.9;\ncolor: #b72331;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"wrap\">\n<img src=\"/zi.png\" style=\"width:60%;\">\n    <div class=\"title\">{{mainTitle}}</div>\n    <div class=\"subtitle\">{{subtitle}}</div>\n  </div>\n</body>\n</html>"
-    }
-  ],
-  "contentPresets": [
-    {
-      "id": "1777795641468",
-      "name": "艺术团合唱",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "锦绣中华",
-        "subtitle": "艺术团合唱"
-      }
-    },
-    {
-      "id": "1777795660840",
-      "name": "2520",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "欢聚坡乡、歌润同心",
-        "subtitle": "2520班"
-      }
-    },
-    {
-      "id": "1777795683442",
-      "name": "2518",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "草原吾根",
-        "subtitle": "2510班"
-      }
-    },
-    {
-      "id": "1777795698754",
-      "name": "2527",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "团结友谊延续红花精神",
-        "subtitle": "2527班"
-      }
-    },
-    {
-      "id": "1777795711816",
-      "name": "2509",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "山海青,一家亲",
-        "subtitle": "2509班"
-      }
-    },
-    {
-      "id": "1777795744408",
-      "name": "2519",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "浴火同行不要怕",
-        "subtitle": "2519班"
-      }
-    },
-    {
-      "id": "1777795766018",
-      "name": "2517",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "春望湾归",
-        "subtitle": "2517班"
-      }
-    },
-    {
-      "id": "1777795781065",
-      "name": "2511",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "敕勒歌·归绿",
-        "subtitle": "2511班"
-      }
-    },
-    {
-      "id": "1777795798993",
-      "name": "2513",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "水不会遗忘流经的方向",
-        "subtitle": "2513班"
-      }
-    },
-    {
-      "id": "1777795813131",
-      "name": "2522",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "歌声飞过田堙",
-        "subtitle": "2522班"
-      }
-    },
-    {
-      "id": "1777795832969",
-      "name": "2504",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "苗家酒魂",
-        "subtitle": "2504班"
-      }
-    },
-    {
-      "id": "1777795886839",
-      "name": "2510",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "稻香里的木棉花",
-        "subtitle": "2510班"
-      }
-    },
-    {
-      "id": "1777795921766",
-      "name": "2530",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "请喝一杯致富茶",
-        "subtitle": "2530班"
-      }
-    },
-    {
-      "id": "1777795936622",
-      "name": "2524",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "鸿雁北归还",
-        "subtitle": "2524班"
-      }
-    },
-    {
-      "id": "1777795950817",
-      "name": "2516",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "小河淌水1952",
-        "subtitle": "2516班"
-      }
-    },
-    {
-      "id": "1777795990056",
-      "name": "2505",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "马兰花开",
-        "subtitle": "2505班"
-      }
-    },
-    {
-      "id": "1777796007962",
-      "name": "艺术团舞蹈",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "阿妈同心圆",
-        "subtitle": "艺术团舞蹈"
-      }
-    },
-    {
-      "id": "1777796041229",
-      "name": "2515",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "心曲-歌飘山水间",
-        "subtitle": "2515班"
-      }
-    },
-    {
-      "id": "1777796054634",
-      "name": "2501",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "松火承光",
-        "subtitle": "2501班"
-      }
-    },
-    {
-      "id": "1777796069135",
-      "name": "2529",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "信封里的春天",
-        "subtitle": "2529班"
-      }
-    },
-    {
-      "id": "1777796083051",
-      "name": "2514",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "乐动青春,唱响未来",
-        "subtitle": "2514班"
-      }
-    },
-    {
-      "id": "1777796097962",
-      "name": "2526",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "掀起你的盖头来",
-        "subtitle": "2526班"
-      }
-    },
-    {
-      "id": "1777796111047",
-      "name": "2502",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "壮乡薪火,山海新篇",
-        "subtitle": "2502班"
-      }
-    },
-    {
-      "id": "1777796123312",
-      "name": "教师特别节目",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "教师特别节目"
-      }
-    },
-    {
-      "id": "1777796135807",
-      "name": "学生会特别节目",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "学生会特别节目"
-      }
-    }
-  ],
-  "activePresetId": "preset-gala-iframe-1",
-  "activeContentPresetId": null,
-  "activeFieldOverrides": {}
+    ],
+    "activePresetId": "preset-gala-iframe-1",
+    "activeContentPresetId": "art-troupe-dance",
+    "activeFieldOverrides": {}
 }
