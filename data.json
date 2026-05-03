@@ -50,6 +50,14 @@
       "appearancePresetId": "preset-gala-iframe-1",
       "fields": {
         "mainTitle": "草原吾根",
+        "subtitle": "2518班"
+      }
+    },    {
+      "id": "1777795683443",
+      "name": "2510",
+      "appearancePresetId": "preset-gala-iframe-1",
+      "fields": {
+        "mainTitle": "稻香里的木棉花",
         "subtitle": "2510班"
       }
     },
@@ -123,15 +131,6 @@
       "fields": {
         "mainTitle": "苗家酒魂",
         "subtitle": "2504班"
-      }
-    },
-    {
-      "id": "1777795886839",
-      "name": "2510",
-      "appearancePresetId": "preset-gala-iframe-1",
-      "fields": {
-        "mainTitle": "稻香里的木棉花",
-        "subtitle": "2510班"
       }
     },
     {
